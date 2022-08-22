@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from textblob import TextBlob
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -8,18 +8,24 @@ import numpy as np
 
 df = pd.read_csv('data/casas.csv')
 # Modelo apenas com o tamanho
-X = df['tamanho']
+# X = df['tamanho']
+# y = df['preco']
+
+X = df.drop('preco', axis=1)
 y = df['preco']
+colunas = ['tamanho', 'ano', 'garagem']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0, test_size=0.3)
 linear_rg = LinearRegression()
-linear_rg.fit(np.array(X_train).reshape(-1, 1), np.array(y_train).reshape(-1, 1))
+linear_rg.fit(X_train, y_train)
 
 app = Flask('meu_app')
+
 
 @app.route('/')
 def main():
     return 'Minha Primeira API'
+
 
 @app.route('/sentimento/<frase>')
 def sentiment(frase):
@@ -28,13 +34,22 @@ def sentiment(frase):
     polaridade = tb_en.sentiment.polarity
     return 'A polaridade da frase é de %s' % polaridade
 
-@app.route('/houseprices1/<tamanho>')
+
+@app.route('/housesprice/<tamanho>')
 def previsao_one_var(tamanho):
     y_pred = linear_rg.predict([[float(tamanho)]])
     a = round(y_pred[0][0], 2)
     return str(a)
 
 
-if __name__ =='__main__':
-    app.run(debug=True)
+@app.route('/cotacao/', methods=['POST'])
+def cotacao():
+    dados = request.get_json()
+    dados_input = [dados[col] for col in colunas]
+    preco = linear_rg.predict([dados_input])
 
+    return jsonify(preco=preco[0])
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

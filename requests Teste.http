@@ -1,3 +1,14 @@
+POST http://localhost:5000/cotacao/
+Content-Type: application/json
+
+{"tamanho": 120,
+"ano": 2001,
+"garagem": 2}
+
+###
+
+
+###
 POST http://localhost:5000/
 Content-Type: application/x-www-form-urlencoded
 
@@ -10,3 +21,5 @@ Accept: application/json
 ###
 GET http://localhost:5000/houseprices1/30
 Accept: application/json
+
+
