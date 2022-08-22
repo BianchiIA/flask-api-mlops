@@ -1,12 +1,21 @@
 POST http://localhost:5000/cotacao/
 Content-Type: application/json
 
-{"tamanho": 120,
-"ano": 2001,
-"garagem": 2}
+{
+  "tamanho": 120,
+  "ano": 2001,
+  "garagem": 2
+}
 
 ###
+POST http://localhost:5000/cotacao2/
+Content-Type: application/json
 
+{
+  "tamanho": 120,
+  "ano": 2001,
+  "garagem": 2
+}
 
 ###
 POST http://localhost:5000/
