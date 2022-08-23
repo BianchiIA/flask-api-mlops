@@ -25,7 +25,7 @@ id=99&content=new-element
 
 ###
 GET http://localhost:5000/sentimento/Eu odeio Itaborai
-Accept: application/json
+Authorization: Basic vinicius 1234
 
 ###
 GET http://localhost:5000/houseprices1/30

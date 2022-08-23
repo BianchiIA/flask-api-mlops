@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_basicauth import BasicAuth
 from textblob import TextBlob
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -6,6 +7,8 @@ from sklearn.linear_model import LinearRegression
 import pickle
 import pandas as pd
 import numpy as np
+
+####### Treino e Retreino do modelo ########
 
 df = pd.read_csv('data/casas.csv')
 # Modelo apenas com o tamanho
@@ -25,7 +28,11 @@ linear_rg.fit(X_train, y_train)
 
 modelo = pickle.load(open('notebooks/modelo.sav','rb'))
 
-app = Flask('meu_app')
+app = Flask(__name__)
+app.config['BASIC_AUTH_USERNAME'] = 'vinicius'
+app.config['BASIC_AUTH_PASSWORD'] = '1234'
+
+basic_auth = BasicAuth(app)
 
 
 @app.route('/')
@@ -34,6 +41,7 @@ def main():
 
 
 @app.route('/sentimento/<frase>')
+@basic_auth.required
 def sentiment(frase):
     tb = TextBlob(frase)
     tb_en = tb.translate(from_lang='pt-bt', to='en')
@@ -49,6 +57,7 @@ def previsao_one_var(tamanho):
 
 
 @app.route('/cotacao/', methods=['POST'])
+@basic_auth.required
 def cotacao():
     dados = request.get_json()
     dados_input = [dados[col] for col in colunas]
