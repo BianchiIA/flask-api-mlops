@@ -26,7 +26,7 @@ linear_rg.fit(X_train, y_train)
 
 ############ Modelo Serializado ############
 
-modelo = pickle.load(open('notebooks/modelo.sav','rb'))
+modelo = pickle.load(open('models/modelo.sav', 'rb'))
 
 app = Flask(__name__)
 app.config['BASIC_AUTH_USERNAME'] = 'vinicius'
